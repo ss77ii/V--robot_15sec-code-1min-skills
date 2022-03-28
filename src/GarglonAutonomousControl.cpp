@@ -1318,19 +1318,31 @@ void right_side_plusMid()
 	delay(40);
 	goStraightCmPID_lib(50, 50, 127, MOVE_BACKWARD, 2, 0, 0.6, 0.9, 0, 2, 15000, 1, hardwareParameter);
 	armAction_1 = {127, 0, 150, 1};
-	turnDegreesPID_lib(315, ON_SPOT_TURN, 127, CLOCKWISE, 2, 0, 0, 2000, 1, hardwareParameter);
+	turnDegreesPID_lib(320, ON_SPOT_TURN, 127, CLOCKWISE, 2, 0, 0.2, 800, 2, hardwareParameter);
 	goStraightCm_Back_Vision(65, 315, 100, DETECT_YELLOW_GOAL_SIG, back_vision,
 							 0.5, 0, 1, 0.5, 0, 5, 0.5, 0, 5, 2000, 1, hardwareParameter);
 	goStraightCm_Back_Vision(20, 315, 50, DETECT_YELLOW_GOAL_SIG, back_vision,
-							 0.5, 0, 1, 0.5, 0, 5, 0.5, 0, 5, 2000, 1, hardwareParameter);
+							 0.5, 0, 1, 0.5, 0, 5, 0.5, 0, 5, 1000, 1, hardwareParameter);
 	hookAction_1 = {0, true, 1};
 	armAction_1 = {127, 0, 400, 1};
 	goStraightCmPID_lib(120, 300, 127, MOVE_FORWARD, 2, 0, 0.6, 0.9, 0, 2, 5000, 1, hardwareParameter);
 	turnDegreesPID_lib(115, ON_SPOT_TURN, 127, COUNTER_CLOCKWISE, 2, 0, 0, 2000, 1, hardwareParameter);
-	goStraightCmPID_lib(50, 145, 127, MOVE_BACKWARD, 2, 0, 0.6, 0.9, 0, 2, 1500, 1, hardwareParameter);
+	goStraightCmPID_lib(20, 145, 127, MOVE_BACKWARD, 2, 0, 0.6, 0.9, 0, 2, 500, 1, hardwareParameter);
+	armAction_1 = {127, 0, 100, 1};
 	hookAction_1 = {0, false, 1};
-	delay(2000);
-	goStraightCmPID_lib(50, 145, 127, MOVE_FORWARD, 2, 0, 0.6, 0.9, 0, 2, 1500, 1, hardwareParameter);
+	delay(500);
+	goStraightCmPID_lib(62, 110, 127, MOVE_FORWARD, 2, 0, 0.6, 0.9, 0, 2, 1500, 1, hardwareParameter);
+	turnDegreesPID_lib(175, ON_SPOT_TURN, 127, COUNTER_CLOCKWISE, 2, 0, 0, 400, 2, hardwareParameter);
+	goStraightCmPID_lib_backVision(70, 180, 100, 1000);
+	hookAction_1 = {0, true, 1};
+	intakeAction_1 = {100, 0, 0, 100, 1};
+	goStraightCmPID_lib(10, 180, 70, MOVE_FORWARD, 2, 0, 0.6, 0.9, 0, 2, 500, 1, hardwareParameter);
+	turnDegreesPID_lib(90, ON_SPOT_TURN, 127, CLOCKWISE, 2, 0, 0, 700, 1, hardwareParameter);
+	armAction_1 = {127, 0, 300, 1};
+	goStraightCmPID_lib(80, 90, 60, MOVE_FORWARD, 2, 0, 0.6, 0.9, 0, 2, 3000, 1, hardwareParameter);
+	goStraightCmPID_lib(80, 90, 127, MOVE_BACKWARD, 2, 0, 0.6, 0.9, 0, 2, 1500, 1, hardwareParameter);
+
+	pros::lcd::print(2, "Time = %f", pros::millis() - startingtime);
 }
 
 /**************************
