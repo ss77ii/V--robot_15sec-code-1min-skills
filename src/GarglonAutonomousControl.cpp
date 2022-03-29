@@ -8,6 +8,9 @@
 #define ON 1
 #define OFF -1
 
+#define FRONT 1
+#define BACK -1
+
 // go straight parameters
 
 //	goStraightCmPID_lib(122, 90, 127, MOVE_FORWARD, 5, 0, 3, 0.35, 0, 26, 6000, 3, hardwareParameter);
@@ -258,6 +261,171 @@ void goStraightCmPID_lib_backVision(int distance, int angle, int speed, int time
 	{
 		goStraightCm_Back_Vision(distance, angle, speed, DETECT_BLUE_GOAL_SIG, back_vision, 0.5, 0, 1, 0.5, 0, 5, 1, 0, 1, timeout, 1, hardwareParameter);
 	}
+}
+
+int get_object_width(int f_b, char color)
+{
+	vision_object_s_t goal;
+	int width_sum = 0;
+	int r_value = 0;
+	int cnt = 20;
+
+	// for (int i = 0; i < 20; i++)
+	// {
+	// 	closest_goal_1 = back_vision.get_by_sig(0, DETECT_RED_GOAL_SIG);
+	// 	w1 += closest_goal_1.width;
+	// 	delay(10);
+	// }
+
+	if (f_b == FRONT)
+	{
+		switch (color)
+		{
+		case 'r':
+			for (int i = 0; i < 20; i++)
+			{
+				goal = front_vision.get_by_sig(0, DETECT_RED_GOAL_SIG);
+				width_sum += goal.width;
+				delay(10);
+			}
+
+			r_value = (double)width_sum / cnt;
+			break;
+
+		case 'R':
+			for (int i = 0; i < 20; i++)
+			{
+				goal = front_vision.get_by_sig(0, DETECT_RED_GOAL_SIG);
+				width_sum += goal.width;
+				delay(10);
+			}
+
+			r_value = (double)width_sum / cnt;
+			break;
+
+		case 'b':
+			for (int i = 0; i < 20; i++)
+			{
+				goal = front_vision.get_by_sig(0, DETECT_BLUE_GOAL_SIG);
+				width_sum += goal.width;
+				delay(10);
+			}
+
+			r_value = (double)width_sum / cnt;
+			break;
+
+		case 'B':
+			for (int i = 0; i < 20; i++)
+			{
+				goal = front_vision.get_by_sig(0, DETECT_BLUE_GOAL_SIG);
+				width_sum += goal.width;
+				delay(10);
+			}
+
+			r_value = (double)width_sum / cnt;
+			break;
+
+		case 'y':
+			for (int i = 0; i < 20; i++)
+			{
+				goal = front_vision.get_by_sig(0, DETECT_YELLOW_GOAL_SIG);
+				width_sum += goal.width;
+				delay(10);
+			}
+
+			r_value = (double)width_sum / cnt;
+			break;
+
+		case 'Y':
+			for (int i = 0; i < 20; i++)
+			{
+				goal = front_vision.get_by_sig(0, DETECT_YELLOW_GOAL_SIG);
+				width_sum += goal.width;
+				delay(10);
+			}
+
+			r_value = (double)width_sum / cnt;
+			break;
+		}
+
+		return r_value;
+	}
+
+	if (f_b == BACK)
+	{
+		switch (color)
+		{
+		case 'r':
+			for (int i = 0; i < 20; i++)
+			{
+				goal = back_vision.get_by_sig(0, DETECT_RED_GOAL_SIG);
+				width_sum += goal.width;
+				delay(10);
+			}
+
+			r_value = (double)width_sum / cnt;
+			break;
+
+		case 'R':
+			for (int i = 0; i < 20; i++)
+			{
+				goal = back_vision.get_by_sig(0, DETECT_RED_GOAL_SIG);
+				width_sum += goal.width;
+				delay(10);
+			}
+
+			r_value = (double)width_sum / cnt;
+			break;
+
+		case 'b':
+			for (int i = 0; i < 20; i++)
+			{
+				goal = back_vision.get_by_sig(0, DETECT_BLUE_GOAL_SIG);
+				width_sum += goal.width;
+				delay(10);
+			}
+
+			r_value = (double)width_sum / cnt;
+			break;
+
+		case 'B':
+			for (int i = 0; i < 20; i++)
+			{
+				goal = back_vision.get_by_sig(0, DETECT_BLUE_GOAL_SIG);
+				width_sum += goal.width;
+				delay(10);
+			}
+
+			r_value = (double)width_sum / cnt;
+			break;
+
+		case 'y':
+			for (int i = 0; i < 20; i++)
+			{
+				goal = back_vision.get_by_sig(0, DETECT_YELLOW_GOAL_SIG);
+				width_sum += goal.width;
+				delay(10);
+			}
+
+			r_value = (double)width_sum / cnt;
+			break;
+
+		case 'Y':
+			for (int i = 0; i < 20; i++)
+			{
+				goal = back_vision.get_by_sig(0, DETECT_YELLOW_GOAL_SIG);
+				width_sum += goal.width;
+				delay(10);
+			}
+
+			r_value = (double)width_sum / cnt;
+			break;
+		}
+
+		return r_value;
+	}
+
+	return -69420; // !!!!!!!!!!!!!!???????????????????
 }
 
 void auton_60s_skills_bridge_version()
@@ -1289,25 +1457,58 @@ void auton_60s_skills_fast_version()
 	waitForTouch();
 }
 
-void right_side()
+void right_side() // slot 1
 {
 	sys_initial_robot_heading = 90;
 	double startingtime = pros::millis();
 	vision_object_s_t closest_goal;
 
 	clawAction_1 = {950, true, 1};
-	goStraightCmPID_lib(107, 90, 127, MOVE_FORWARD, 0, 0, 0, 1000, 0, 0, 5000, 1, hardwareParameter);
-	delay(40);
-	goStraightCmPID_lib(100, 90, 127, MOVE_BACKWARD, 2, 0, 0.6, 0.65, 0, 2, 15000, 1, hardwareParameter);
-	turnDegreesPID_lib(330, ON_SPOT_TURN, 127, CLOCKWISE, 2, 0, 0, 2000, 1, hardwareParameter);
-	clawAction_1 = {0, false, 1};
+	goStraightCmPID_lib(107, 90, 127, MOVE_FORWARD, 2, 0, 0.6, 0.9, 0, 2, 5000, 1, hardwareParameter);
+	delay(50);
+	pros::lcd::print(0, "time at grab: %f", pros::millis() - startingtime);
 	delay(100);
-	goStraightCmPID_lib(70, 310, 127, MOVE_BACKWARD, 2, 0, 0.6, 0.65, 0, 2, 1000, 1, hardwareParameter);
-	turnDegreesPID_lib(180, ON_SPOT_TURN, 127, CLOCKWISE, 2, 0, 0, 2000, 1, hardwareParameter);
-	goStraightCmPID_lib_backVision(90, 180, 100, 2500);
+	armAction_1 = {127, 0, -10, 1};
+	goStraightCmPID_lib(110, 100, 127, MOVE_BACKWARD, 2, 0, 2, 1, 0, 3, 15000, 1, hardwareParameter);
+	pros::lcd::print(1, "time after: %f", pros::millis() - startingtime);
+
+	armAction_1 = {127, 0, 50, 1};
+	delay(200);
+	turnDegreesPID_lib(350, ON_SPOT_TURN, 127, CLOCKWISE, 2, 0, 0, 2000, 1, hardwareParameter);
+	delay(100);
+	clawAction_1 = {0, false, 1};
+	goStraightCmPID_lib(10, 350, 80, MOVE_FORWARD, 2, 0, 2, 10, 0, 2, 600, 1, hardwareParameter);
+	goStraightCmPID_lib(5, 350, 80, MOVE_BACKWARD, 2, 0, 2, 10, 0, 2, 600, 1, hardwareParameter);
+	armAction_1 = {127, 0, 200, 1};
+
+	turnDegreesPID_lib(180, ON_SPOT_TURN, 127, COUNTER_CLOCKWISE, 1.6, 0, -1, 1200, 2, hardwareParameter);
+	goStraightCmPID_lib_backVision(90, 180, 100, 1800);
+	armAction_1 = {125, 0, 300, 1};
+	hookAction_1 = {0, true, 1};
+	intakeAction_1 = {127, 300, 10000, 127, 1};
+	delay(100);
+
+	goStraightCmPID_lib(10, 180, 80, MOVE_FORWARD, 2, 0, 2, 10, 0, 2, 600, 1, hardwareParameter);
+	armAction_1 = {127, 0, 0, 1};
+	goStraightCmPID_lib(100, 135, 80, MOVE_FORWARD, 1, 0, 1, 10, 0, 2, 1500, 1, hardwareParameter);
+
+	delay(200);
+	goStraightCm_Front_Vision(30, 135, 100, DETECT_YELLOW_GOAL_SIG, front_vision, 0.5, 0, 1, 0.3, 0, 10, 0.4, 0, 0, 1000, 1, hardwareParameter);
+	double angle = get_robot_heading_lib(hardwareParameter);
+	goStraightCmPID_lib(25, angle, 80, MOVE_FORWARD, 1, 0, 1, 10, 0, 2, 1500, 1, hardwareParameter);
+	clawAction_1 = {0, true, 1};
+	goStraightCmPID_lib(45, 135, 127, MOVE_BACKWARD, 1, 0, 1, 10, 0, 2, 1500, 1, hardwareParameter);
+	armAction_1 = {125, 0, 300, 1};
+	turnDegreesPID_lib(180, ON_SPOT_TURN, 127, COUNTER_CLOCKWISE, 1.6, 0, -1, 1200, 1, hardwareParameter);
+	goStraightCmPID_lib(120, 180, 90, MOVE_FORWARD, 1, 0, 1, 10, 0, 2, 1500, 1, hardwareParameter);
+	hookAction_1 = {500, false, 1};
+	goStraightCmPID_lib(120, 160, 127, MOVE_BACKWARD, 1, 0, 1, 10, 0, 2, 1500, 1, hardwareParameter);
+
+	std::cout << pros::millis() - startingtime << std::endl;
+	waitForTouch();
 }
 
-void right_side_plusMid()
+void right_side_plusMid() // done
 {
 	sys_initial_robot_heading = 90;
 	double startingtime = pros::millis();
@@ -1319,30 +1520,48 @@ void right_side_plusMid()
 	goStraightCmPID_lib(50, 50, 127, MOVE_BACKWARD, 2, 0, 0.6, 0.9, 0, 2, 15000, 1, hardwareParameter);
 	armAction_1 = {127, 0, 150, 1};
 	turnDegreesPID_lib(320, ON_SPOT_TURN, 127, CLOCKWISE, 2, 0, 0.2, 800, 2, hardwareParameter);
-	goStraightCm_Back_Vision(65, 315, 100, DETECT_YELLOW_GOAL_SIG, back_vision,
-							 0.5, 0, 1, 0.5, 0, 5, 0.5, 0, 5, 2000, 1, hardwareParameter);
-	goStraightCm_Back_Vision(20, 315, 50, DETECT_YELLOW_GOAL_SIG, back_vision,
-							 0.5, 0, 1, 0.5, 0, 5, 0.5, 0, 5, 1000, 1, hardwareParameter);
-	hookAction_1 = {0, true, 1};
-	armAction_1 = {127, 0, 400, 1};
-	goStraightCmPID_lib(120, 300, 127, MOVE_FORWARD, 2, 0, 0.6, 0.9, 0, 2, 5000, 1, hardwareParameter);
-	turnDegreesPID_lib(115, ON_SPOT_TURN, 127, COUNTER_CLOCKWISE, 2, 0, 0, 2000, 1, hardwareParameter);
-	goStraightCmPID_lib(20, 145, 127, MOVE_BACKWARD, 2, 0, 0.6, 0.9, 0, 2, 500, 1, hardwareParameter);
-	armAction_1 = {127, 0, 100, 1};
-	hookAction_1 = {0, false, 1};
-	delay(500);
-	goStraightCmPID_lib(62, 110, 127, MOVE_FORWARD, 2, 0, 0.6, 0.9, 0, 2, 1500, 1, hardwareParameter);
-	turnDegreesPID_lib(175, ON_SPOT_TURN, 127, COUNTER_CLOCKWISE, 2, 0, 0, 400, 2, hardwareParameter);
-	goStraightCmPID_lib_backVision(70, 180, 100, 1000);
-	hookAction_1 = {0, true, 1};
-	intakeAction_1 = {100, 0, 0, 100, 1};
-	goStraightCmPID_lib(10, 180, 70, MOVE_FORWARD, 2, 0, 0.6, 0.9, 0, 2, 500, 1, hardwareParameter);
-	turnDegreesPID_lib(90, ON_SPOT_TURN, 127, CLOCKWISE, 2, 0, 0, 700, 1, hardwareParameter);
-	armAction_1 = {127, 0, 300, 1};
-	goStraightCmPID_lib(80, 90, 60, MOVE_FORWARD, 2, 0, 0.6, 0.9, 0, 2, 3000, 1, hardwareParameter);
-	goStraightCmPID_lib(80, 90, 127, MOVE_BACKWARD, 2, 0, 0.6, 0.9, 0, 2, 1500, 1, hardwareParameter);
 
-	pros::lcd::print(2, "Time = %f", pros::millis() - startingtime);
+	int midY_w = get_object_width(BACK, 'y');
+	std::cout << "midY_w: " << midY_w << std::endl;
+
+	if (midY_w >= 80) // while changing only one part of if statement, remember to change all other places where these codes may overlap.
+	{
+		goStraightCm_Back_Vision(65, 315, 100, DETECT_YELLOW_GOAL_SIG, back_vision,
+								 0.5, 0, 1, 0.5, 0, 5, 0.5, 0, 5, 2000, 1, hardwareParameter);
+		goStraightCm_Back_Vision(20, 315, 50, DETECT_YELLOW_GOAL_SIG, back_vision,
+								 0.5, 0, 1, 0.5, 0, 5, 0.5, 0, 5, 1000, 1, hardwareParameter);
+		hookAction_1 = {0, true, 1};
+		armAction_1 = {127, 0, 400, 1};
+		goStraightCmPID_lib(120, 300, 127, MOVE_FORWARD, 2, 0, 0.6, 0.9, 0, 2, 5000, 1, hardwareParameter);
+		turnDegreesPID_lib(115, ON_SPOT_TURN, 127, COUNTER_CLOCKWISE, 2, 0, 0, 2000, 1, hardwareParameter);
+		goStraightCmPID_lib(20, 145, 127, MOVE_BACKWARD, 2, 0, 0.6, 0.9, 0, 2, 500, 1, hardwareParameter);
+		armAction_1 = {127, 0, 100, 1};
+		hookAction_1 = {0, false, 1};
+		delay(500);
+		goStraightCmPID_lib(62, 110, 127, MOVE_FORWARD, 2, 0, 0.6, 0.9, 0, 2, 1500, 1, hardwareParameter);
+		turnDegreesPID_lib(175, ON_SPOT_TURN, 127, COUNTER_CLOCKWISE, 2, 0, 0, 400, 2, hardwareParameter);
+		goStraightCmPID_lib_backVision(70, 180, 100, 1000);
+		hookAction_1 = {0, true, 1};
+		intakeAction_1 = {100, 0, 0, 100, 1};
+		armAction_1 = {127, 100, 300, 1};
+		goStraightCmPID_lib(10, 180, 70, MOVE_FORWARD, 2, 0, 0.6, 0.9, 0, 2, 500, 1, hardwareParameter);
+		turnDegreesPID_lib(90, ON_SPOT_TURN, 127, CLOCKWISE, 2, 0, 0, 700, 1, hardwareParameter);
+		goStraightCmPID_lib(80, 90, 60, MOVE_FORWARD, 2, 0, 0.6, 0.9, 0, 2, 3000, 1, hardwareParameter);
+		goStraightCmPID_lib(80, 90, 127, MOVE_BACKWARD, 2, 0, 0.6, 0.9, 0, 2, 1500, 1, hardwareParameter);
+	}
+	else
+	{
+		goStraightCmPID_lib(10, 320, 70, MOVE_FORWARD, 2, 0, 0.6, 0.9, 0, 2, 5000, 1, hardwareParameter);
+		turnDegreesPID_lib(180, ON_SPOT_TURN, 127, CLOCKWISE, 2, 0, 0, 700, 2, hardwareParameter);
+		goStraightCmPID_lib_backVision(70, 180, 100, 1000);
+		hookAction_1 = {0, true, 1};
+		intakeAction_1 = {100, 0, 0, 100, 1};
+		armAction_1 = {127, 100, 300, 1};
+		goStraightCmPID_lib(10, 180, 70, MOVE_FORWARD, 2, 0, 0.6, 0.9, 0, 2, 500, 1, hardwareParameter);
+		turnDegreesPID_lib(90, ON_SPOT_TURN, 127, CLOCKWISE, 2, 0, 0, 700, 1, hardwareParameter);
+		goStraightCmPID_lib(80, 90, 60, MOVE_FORWARD, 2, 0, 0.6, 0.9, 0, 2, 3000, 1, hardwareParameter);
+		goStraightCmPID_lib(80, 90, 127, MOVE_BACKWARD, 2, 0, 0.6, 0.9, 0, 2, 1500, 1, hardwareParameter);
+	}
 }
 
 /**************************
@@ -1381,8 +1600,8 @@ void autonomous()
 	// auton_60s_skills_bridge_version(); // no slot
 	// auton_60s_skills_fast_version(); // no slot
 	// auton_60s_skills(); // no slot
-	// right_side(); // slot 1
-	right_side_plusMid(); // slot 2
+	right_side(); // slot 1
+	// right_side_plusMid(); // slot 2
 
 	waitForTouch();
 }
