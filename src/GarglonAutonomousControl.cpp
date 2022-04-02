@@ -1795,7 +1795,7 @@ void autonomous()
 	// right_side_plusMid(); // slot 2
 	// double_wp(); // slot 3
 	// right_to_center();
-	left_side();
+	// left_side();
 
 	waitForTouch();
 }
