@@ -1755,6 +1755,39 @@ void left_side()
 	}
 }
 
+void left_side_wp()
+{
+	sys_initial_to_auton_drifting = inertial_sensor.get_rotation();
+	sys_initial_robot_heading = 85;
+	long startingtime = pros::millis();
+	vision_object_s_t closest_goal;
+
+	hookAction_1 = {0, true, 1};
+	clawAction_1 = {950, true, 1};
+	goStraightCmPID_lib(107, 85, 127, MOVE_FORWARD, 2, 0, 0.6, 0.65, 0, 2, 5000, 1, hardwareParameter);
+	clawAction_1 = {0, true, 1};
+	hookAction_1 = {0, false, 1};
+	std::cout << "time at grab: " << pros::millis() - startingtime << std::endl;
+	delay(100);
+	armAction_1 = {127, 0, 10, 1};
+	goStraightCmPID_lib(105, 85, 127, MOVE_BACKWARD, 2, 0, 2, 1, 0, 5, 15000, 1, hardwareParameter);
+	std::cout << "time after: " << pros::millis() - startingtime << std::endl;
+
+	hookAction_1 = {0, false, 1};
+	goStraightCmPID_lib(30, 95, 127, MOVE_BACKWARD, 2, 0, 2, 1, 0, 5, 15000, 1, hardwareParameter);
+	turnDegreesPID_lib(180, ON_SPOT_TURN, 127, COUNTER_CLOCKWISE, 6, 0, 0, 1200, 2, hardwareParameter);
+	goStraightCmPID_lib_backVision(47, 180, 70, 1500);
+	hookAction_1 = {0, true, 1};
+	delay(50);
+
+	goStraightCmPID_lib(90, 90, 127, MOVE_FORWARD, 2, 0, 2, 1, 0, 5, 1500, 1, hardwareParameter);
+	armAction_1 = {127, 0, 200, 1};
+	turnDegreesPID_lib(10, ON_SPOT_TURN, 127, CLOCKWISE, 6, 0, 0, 1200, 1, hardwareParameter);
+	intakeAction_1 = {127, 0, 0, 127, 2};
+	intakeAction_2 = {0, 2700, 0, 0, 2};
+	goStraightCmPID_lib(160, 10, 70, MOVE_FORWARD, 2, 0, 2, 1, 0, 5, 1500, 1, hardwareParameter);
+}
+
 /**************************
 
 AUTON
@@ -1795,7 +1828,8 @@ void autonomous()
 	// right_side_plusMid(); // slot 2
 	// double_wp(); // slot 3
 	// right_to_center();
-	 left_side();
+	// left_side();
+	left_side_wp();
 
 	waitForTouch();
 }
