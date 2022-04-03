@@ -1786,13 +1786,13 @@ void left_side_wp()
 	turnDegreesPID_lib(10, ON_SPOT_TURN, 127, CLOCKWISE, 6, 0, 0, 1200, 1, hardwareParameter);
 	intakeAction_1 = {127, 0, 0, 127, 2};
 	intakeAction_2 = {0, 2300, 0, 0, 2};
-	goStraightCmPID_lib(160, 10, 90, MOVE_FORWARD, 2, 0, 2, 1, 0, 5, 5000, 1, hardwareParameter);
+	goStraightCmPID_lib(180, 10, 90, MOVE_FORWARD, 2, 0, 2, 1, 0, 5, 5000, 1, hardwareParameter);
 
 	hookAction_1 = {0, false, 1};
 	turnDegreesPID_lib(130, ON_SPOT_TURN, 100, COUNTER_CLOCKWISE, 6, 0, 0, 1200, 2, hardwareParameter);
-	goStraightCmPID_lib(160, 170, 90, MOVE_BACKWARD, 2, 0, 2, 1, 0, 5, 1000, 1, hardwareParameter);
-	goStraightCmPID_lib_backVision(40, 160, 100, 2000);
+	goStraightCmPID_lib(50, 170, 90, MOVE_BACKWARD, 2, 0, 2, 1, 0, 5, 1000, 1, hardwareParameter);
 	hookAction_1 = {0, true, 1};
+	intakeAction_1 = {127, 0, 0, 127, 1};
 }
 
 /**************************
